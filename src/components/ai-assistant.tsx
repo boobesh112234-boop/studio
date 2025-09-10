@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useRef, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Bot, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ function SubmitButton() {
 
 export default function AiAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [state, formAction] = useFormState(handleAiAssistantQuery, null);
+  const [state, formAction] = useActionState(handleAiAssistantQuery, null);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
