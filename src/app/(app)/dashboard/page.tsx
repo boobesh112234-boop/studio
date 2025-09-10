@@ -43,7 +43,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <KpiCard title="Cost Impact" value={`$${kpis.costImpact}M`} icon={DollarSign} />
+        <KpiCard title="Cost Impact" value={`₹${kpis.costImpact} Cr`} icon={DollarSign} />
         <KpiCard title="Delay Impact" value={`${kpis.delayImpact} Days`} icon={Truck} />
         <KpiCard title="Carbon Impact" value={`${kpis.carbonImpact} kT`} icon={Zap} />
       </div>

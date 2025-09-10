@@ -20,8 +20,7 @@ export default function AppHeader() {
           <span className="sr-only">Notifications</span>
         </Button>
         <Avatar>
-          <AvatarImage src="https://picsum.photos/seed/user/40/40" data-ai-hint="user avatar" />
-          <AvatarFallback>U</AvatarFallback>
+          <AvatarFallback>N</AvatarFallback>
         </Avatar>
       </div>
     </header>

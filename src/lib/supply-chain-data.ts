@@ -1,20 +1,20 @@
 import type { Node, Route, Kpi, Scenario } from './types';
 
 export const initialNodes: Node[] = [
-  { id: 'shanghai', name: 'Port of Shanghai', type: 'Port', position: { lat: 31.2304, lng: 121.4737 }, riskLevel: 'Safe', details: 'Busiest container port in the world.' },
-  { id: 'la', name: 'Port of Los Angeles', type: 'Port', position: { lat: 33.7292, lng: -118.2620 }, riskLevel: 'Safe', details: 'Major gateway for trade with Asia.' },
-  { id: 'rotterdam', name: 'Port of Rotterdam', type: 'Port', position: { lat: 51.9225, lng: 4.47917 }, riskLevel: 'Safe', details: 'Largest port in Europe.' },
-  { id: 'shenzhen', name: 'Shenzhen Factory', type: 'Factory', position: { lat: 22.5431, lng: 114.0579 }, riskLevel: 'Safe', details: 'Electronics manufacturing hub.' },
-  { id: 'chicago_wh', name: 'Chicago Warehouse', type: 'Warehouse', position: { lat: 41.8781, lng: -87.6298 }, riskLevel: 'Safe', details: 'Central US distribution center.' },
-  { id: 'hamburg_wh', name: 'Hamburg Warehouse', type: 'Warehouse', position: { lat: 53.5511, lng: 9.9937 }, riskLevel: 'Safe', details: 'Northern Europe logistics hub.' },
+  { id: 'mumbai_port', name: 'Port of Mumbai', type: 'Port', position: { lat: 18.9647, lng: 72.8258 }, riskLevel: 'Safe', details: 'One of the largest ports in India.' },
+  { id: 'chennai_port', name: 'Port of Chennai', type: 'Port', position: { lat: 13.0827, lng: 80.2707 }, riskLevel: 'Safe', details: 'Major gateway port for southern India.' },
+  { id: 'mundra_port', name: 'Port of Mundra', type: 'Port', position: { lat: 22.8465, lng: 69.7251 }, riskLevel: 'Safe', details: 'India\'s largest private port.' },
+  { id: 'bengaluru_factory', name: 'Bengaluru Factory', type: 'Factory', position: { lat: 12.9716, lng: 77.5946 }, riskLevel: 'Safe', details: 'Technology and manufacturing hub.' },
+  { id: 'delhi_wh', name: 'Delhi Warehouse', type: 'Warehouse', position: { lat: 28.7041, lng: 77.1025 }, riskLevel: 'Safe', details: 'Key distribution center for Northern India.' },
+  { id: 'kolkata_wh', name: 'Kolkata Warehouse', type: 'Warehouse', position: { lat: 22.5726, lng: 88.3639 }, riskLevel: 'Safe', details: 'Logistics hub for Eastern India.' },
 ];
 
 export const initialRoutes: Route[] = [
-  { id: 'shanghai-la', from: 'shanghai', to: 'la', riskLevel: 'Safe' },
-  { id: 'shenzhen-shanghai', from: 'shenzhen', to: 'shanghai', riskLevel: 'Safe' },
-  { id: 'la-chicago_wh', from: 'la', to: 'chicago_wh', riskLevel: 'Safe' },
-  { id: 'shanghai-rotterdam', from: 'shanghai', to: 'rotterdam', riskLevel: 'Safe' },
-  { id: 'rotterdam-hamburg_wh', from: 'rotterdam', to: 'hamburg_wh', riskLevel: 'Safe' },
+  { id: 'bengaluru-chennai', from: 'bengaluru_factory', to: 'chennai_port', riskLevel: 'Safe' },
+  { id: 'chennai-mumbai', from: 'chennai_port', to: 'mumbai_port', riskLevel: 'Safe' },
+  { id: 'mumbai-delhi', from: 'mumbai_port', to: 'delhi_wh', riskLevel: 'Safe' },
+  { id: 'chennai-kolkata', from: 'chennai_port', to: 'kolkata_wh', riskLevel: 'Safe' },
+  { id: 'mumbai-mundra', from: 'mumbai_port', to: 'mundra_port', riskLevel: 'Safe' },
 ];
 
 export const initialKpis: Kpi = {
@@ -33,33 +33,33 @@ export const scenarios: Scenario[] = [
     },
   },
   {
-    id: 'port-strike-la',
-    name: 'Port Strike in Los Angeles',
-    description: 'A labor strike has halted operations at the Port of Los Angeles.',
+    id: 'port-strike-mumbai',
+    name: 'Port Strike in Mumbai',
+    description: 'A labor strike has halted operations at the Port of Mumbai.',
     effects: {
-      nodes: [{ id: 'la', newRiskLevel: 'Disrupted' }],
-      routes: [{ id: 'shanghai-la', newRiskLevel: 'Warning' }, { id: 'la-chicago_wh', newRiskLevel: 'Disrupted' }],
-      kpis: { costImpact: 1.2, delayImpact: 7, carbonImpact: 0.3 },
+      nodes: [{ id: 'mumbai_port', newRiskLevel: 'Disrupted' }],
+      routes: [{ id: 'chennai-mumbai', newRiskLevel: 'Warning' }, { id: 'mumbai-delhi', newRiskLevel: 'Disrupted' }],
+      kpis: { costImpact: 9, delayImpact: 7, carbonImpact: 0.3 },
     },
   },
   {
-    id: 'factory-fire-shenzhen',
-    name: 'Factory Fire in Shenzhen',
-    description: 'A major fire has stopped production at the Shenzhen electronics factory.',
+    id: 'factory-fire-bengaluru',
+    name: 'Factory Fire in Bengaluru',
+    description: 'A major fire has stopped production at the Bengaluru factory.',
     effects: {
-      nodes: [{ id: 'shenzhen', newRiskLevel: 'Disrupted' }],
-      routes: [{id: 'shenzhen-shanghai', newRiskLevel: 'Disrupted'}],
-      kpis: { costImpact: 2.5, delayImpact: 14, carbonImpact: 0.1 },
+      nodes: [{ id: 'bengaluru_factory', newRiskLevel: 'Disrupted' }],
+      routes: [{id: 'bengaluru-chennai', newRiskLevel: 'Disrupted'}],
+      kpis: { costImpact: 18, delayImpact: 14, carbonImpact: 0.1 },
     },
   },
   {
-    id: 'shipping-congestion-shanghai',
-    name: 'Shipping Congestion at Shanghai',
-    description: 'Unprecedented container volume is causing significant delays at the Port of Shanghai.',
+    id: 'shipping-congestion-chennai',
+    name: 'Shipping Congestion at Chennai',
+    description: 'Monsoon season is causing significant delays at the Port of Chennai.',
     effects: {
-      nodes: [{ id: 'shanghai', newRiskLevel: 'Warning' }],
-      routes: [{ id: 'shanghai-la', newRiskLevel: 'Warning' }, { id: 'shanghai-rotterdam', newRiskLevel: 'Warning' }],
-      kpis: { costImpact: 0.8, delayImpact: 4, carbonImpact: 0.5 },
+      nodes: [{ id: 'chennai_port', newRiskLevel: 'Warning' }],
+      routes: [{ id: 'bengaluru-chennai', newRiskLevel: 'Warning' }, { id: 'chennai-mumbai', newRiskLevel: 'Warning' }],
+      kpis: { costImpact: 6, delayImpact: 4, carbonImpact: 0.5 },
     }
   }
 ];
