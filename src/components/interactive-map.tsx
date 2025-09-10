@@ -1,14 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Map, AdvancedMarker, InfoWindow, useGoogleMaps } from '@vis.gl/react-google-maps';
+import { Map, AdvancedMarker, InfoWindow, useMap } from '@vis.gl/react-google-maps';
 import type { Node, Route } from '@/lib/types';
 import { cn } from '@/lib/utils';
-
-type InteractiveMapProps = {
-  nodes: Node[];
-  routes: Route[];
-};
 
 const mapStyles = [
   { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
@@ -97,8 +92,13 @@ const riskColorMap = {
   Disrupted: '#f87171', // red-400
 };
 
+interface InteractiveMapProps {
+  nodes: Node[];
+  routes: Route[];
+}
+
 function Routes({ routes, nodes }: { routes: Route[], nodes: Node[] }) {
-  const map = useGoogleMaps()?.map;
+  const map = useMap();
 
   useEffect(() => {
     if (!map) return;
