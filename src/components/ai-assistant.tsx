@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { Bot, Send, User } from "lucide-react";
+import { Bot, Send, User, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -51,13 +51,25 @@ export default function AiAssistant() {
       formAction(formData);
     }
   };
+  
+  const handleClearChat = () => {
+    setMessages([]);
+  };
 
   return (
     <div className="flex flex-col h-full">
-      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <Bot className="h-6 w-6 text-primary" />
-        AI Assistant
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <Bot className="h-6 w-6 text-primary" />
+          AI Assistant
+        </h2>
+        {messages.length > 0 && (
+          <Button variant="ghost" size="icon" onClick={handleClearChat} className="h-8 w-8">
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Clear Chat</span>
+          </Button>
+        )}
+      </div>
       <ScrollArea className="flex-1 -mx-4">
         <div className="px-4 space-y-4" ref={scrollAreaRef}>
           {messages.map((message) => (
