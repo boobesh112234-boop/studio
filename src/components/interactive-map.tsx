@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Map, AdvancedMarker, InfoWindow, Polyline } from '@vis.gl/react-google-maps';
+import React, { useEffect, useState } from 'react';
+import { Map, AdvancedMarker, InfoWindow, useGoogleMaps } from '@vis.gl/react-google-maps';
 import type { Node, Route } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -97,18 +97,40 @@ const riskColorMap = {
   Disrupted: '#f87171', // red-400
 };
 
+function Routes({ routes, nodes }: { routes: Route[], nodes: Node[] }) {
+  const map = useGoogleMaps()?.map;
+
+  useEffect(() => {
+    if (!map) return;
+
+    const polylines: google.maps.Polyline[] = [];
+
+    routes.forEach(route => {
+      const fromNode = nodes.find(n => n.id === route.from);
+      const toNode = nodes.find(n => n.id === route.to);
+      if (!fromNode || !toNode) return;
+
+      const polyline = new google.maps.Polyline({
+        path: [fromNode.position, toNode.position],
+        strokeColor: riskColorMap[route.riskLevel],
+        strokeOpacity: route.riskLevel === 'Safe' ? 0.5 : 1,
+        strokeWeight: route.riskLevel === 'Safe' ? 2 : 3,
+      });
+
+      polyline.setMap(map);
+      polylines.push(polyline);
+    });
+
+    return () => {
+      polylines.forEach(p => p.setMap(null));
+    };
+  }, [map, routes, nodes]);
+
+  return null;
+}
+
 export default function InteractiveMap({ nodes, routes }: InteractiveMapProps) {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-
-  const routePaths = routes.map(route => {
-    const fromNode = nodes.find(n => n.id === route.from);
-    const toNode = nodes.find(n => n.id === route.to);
-    if (!fromNode || !toNode) return null;
-    return {
-      path: [fromNode.position, toNode.position],
-      riskLevel: route.riskLevel,
-    };
-  }).filter(Boolean);
 
   return (
     <Map
@@ -165,15 +187,7 @@ export default function InteractiveMap({ nodes, routes }: InteractiveMapProps) {
         </InfoWindow>
       )}
 
-      {routePaths.map((route, index) => route && (
-        <Polyline
-          key={index}
-          path={route.path}
-          strokeColor={riskColorMap[route.riskLevel]}
-          strokeOpacity={route.riskLevel === 'Safe' ? 0.5 : 1}
-          strokeWeight={route.riskLevel === 'Safe' ? 2 : 3}
-        />
-      ))}
+      <Routes routes={routes} nodes={nodes} />
     </Map>
   );
 }
